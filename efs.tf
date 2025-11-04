@@ -1,0 +1,43 @@
+# EFS Security Group
+resource "aws_security_group" "efs" {
+  name        = "${var.name}-efs-sg"
+  description = "Security group for EFS"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Allow NFS traffic from private subnets"
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  tags = {
+    Name                     = "${var.name}-efs-sg"
+    "karpenter.sh/discovery" = var.name
+  }
+}
+
+resource "aws_efs_file_system" "this" {
+  creation_token  = "${var.name}-efs"
+  encrypted       = true
+  throughput_mode = var.efs_throughput_mode
+
+  lifecycle_policy {
+    transition_to_ia = "AFTER_7_DAYS"
+  }
+  lifecycle_policy {
+    transition_to_primary_storage_class = "AFTER_1_ACCESS"
+  }
+  tags = {
+    Name = "${var.name}-efs"
+  }
+}
+
+resource "aws_efs_mount_target" "this" {
+  count = length(var.private_subnets)
+
+  file_system_id  = aws_efs_file_system.this.id
+  subnet_id       = var.private_subnets[count.index]
+  security_groups = [aws_security_group.efs.id]
+}
