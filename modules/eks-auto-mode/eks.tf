@@ -6,6 +6,8 @@ module "eks" {
   kubernetes_version     = var.eks_cluster_version
   endpoint_public_access = true
 
+  authentication_mode = "API_AND_CONFIG_MAP"
+
   vpc_id     = var.vpc_id
   subnet_ids = var.subnet_ids
   # control_plane_subnet_ids = module.vpc.intra_subnets
