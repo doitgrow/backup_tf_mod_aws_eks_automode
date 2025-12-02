@@ -1,3 +1,3 @@
 output "eks" {
-  value = module.eks
+  value = module.eks_auto_mode
 }
