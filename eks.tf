@@ -1,6 +1,5 @@
 module "eks_auto_mode" {
-  source = "./modules/eks-auto-mode"
-
+  source                       = "./modules/eks-auto-mode"
   name                         = var.name
   region                       = var.region
   eks_cluster_version          = var.eks_cluster_version
@@ -11,4 +10,6 @@ module "eks_auto_mode" {
   efs_file_system_id           = aws_efs_file_system.this.id
   gpu_nodepool_capacity_type   = var.gpu_nodepool_capacity_type
   gpu_nodepool_instance_family = var.gpu_nodepool_instance_family
+  pod_subnet_ids               = var.pod_subnet_ids
+  pod_security_group_ids       = var.pod_security_group_ids
 }

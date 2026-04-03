@@ -20,7 +20,7 @@ spec:
       nodeClassRef:
         group: eks.amazonaws.com
         kind: NodeClass
-        name: default
+        name: custom
       requirements:
         - key: karpenter.sh/capacity-type
           operator: In
@@ -69,7 +69,7 @@ spec:
       nodeClassRef:
         group: eks.amazonaws.com
         kind: NodeClass
-        name: default
+        name: custom
       requirements:
         - key: karpenter.sh/capacity-type
           operator: In
@@ -122,7 +122,7 @@ spec:
       nodeClassRef:
         group: eks.amazonaws.com
         kind: NodeClass
-        name: default
+        name: custom
       requirements:
         - key: karpenter.sh/capacity-type
           operator: In
@@ -162,6 +162,14 @@ spec:
   role: ${module.eks.node_iam_role_name}
   ephemeralStorage:
     size: 500Gi
+  podSubnetSelectorTerms:
+%{for id in var.pod_subnet_ids~}
+    - id: ${id}
+%{endfor~}
+  podSecurityGroupSelectorTerms:
+%{for id in var.pod_security_group_ids~}
+    - id: ${id}
+%{endfor~}
   YAML
 
   depends_on = [module.eks]

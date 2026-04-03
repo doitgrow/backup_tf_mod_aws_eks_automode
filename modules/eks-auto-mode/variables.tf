@@ -8,6 +8,8 @@ variable "domain" { type = string }
 variable "efs_file_system_id" { type = string }
 variable "gpu_nodepool_capacity_type" { type = list(string) }
 variable "gpu_nodepool_instance_family" { type = list(string) }
+variable "pod_subnet_ids" { type = list(string) }
+variable "pod_security_group_ids" { type = list(string) }
 
 terraform {
   required_version = ">= 1.5"

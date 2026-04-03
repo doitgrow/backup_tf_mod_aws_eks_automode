@@ -36,6 +36,14 @@ variable "gpu_nodepool_instance_family" {
   default = ["g6e", "g6", "g5g", "p4de", "p4d"] # H200: "p5e", H100: "p5"
 }
 
+variable "pod_subnet_ids" {
+  type = list(string)
+}
+
+variable "pod_security_group_ids" {
+  type = list(string)
+}
+
 locals {
   account_id = data.aws_caller_identity.current.account_id
 }
