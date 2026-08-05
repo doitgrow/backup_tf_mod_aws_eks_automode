@@ -12,4 +12,5 @@ module "eks_auto_mode" {
   gpu_nodepool_instance_family = var.gpu_nodepool_instance_family
   pod_subnet_ids               = var.pod_subnet_ids
   pod_security_group_ids       = var.pod_security_group_ids
+  enable_external_dns          = var.enable_external_dns
 }

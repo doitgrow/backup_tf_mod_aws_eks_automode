@@ -10,6 +10,10 @@ variable "gpu_nodepool_capacity_type" { type = list(string) }
 variable "gpu_nodepool_instance_family" { type = list(string) }
 variable "pod_subnet_ids" { type = list(string) }
 variable "pod_security_group_ids" { type = list(string) }
+variable "enable_external_dns" {
+  type    = bool
+  default = true
+}
 
 terraform {
   required_version = ">= 1.5"

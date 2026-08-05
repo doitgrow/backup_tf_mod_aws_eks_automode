@@ -44,6 +44,12 @@ variable "pod_security_group_ids" {
   type = list(string)
 }
 
+variable "enable_external_dns" {
+  description = "Enable external-dns resources inside the module. Set to false if managed externally (e.g., via IRSA at root level)."
+  type        = bool
+  default     = true
+}
+
 locals {
   account_id = data.aws_caller_identity.current.account_id
 }
