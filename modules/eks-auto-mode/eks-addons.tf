@@ -33,7 +33,7 @@ spec:
           values: ["4"]
         - key: kubernetes.io/arch
           operator: In
-          values: ["amd64", "arm64"]
+          values: ["amd64"]
         - key: kubernetes.io/os
           operator: In
           values: ["linux"]
@@ -82,7 +82,7 @@ spec:
           values: ["${join("\", \"", var.gpu_nodepool_instance_family)}"]
         - key: kubernetes.io/arch
           operator: In
-          values: ["amd64", "arm64"]
+          values: ["amd64"]
         - key: kubernetes.io/os
           operator: In
           values: ["linux"]
