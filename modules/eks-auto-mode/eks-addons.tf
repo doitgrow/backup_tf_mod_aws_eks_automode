@@ -154,8 +154,9 @@ metadata:
   name: custom
 spec:
   subnetSelectorTerms:
-    - tags:
-        Name: "${module.eks.cluster_name}-private-*"
+%{for id in var.subnet_ids~}
+    - id: ${id}
+${endfor~}
   securityGroupSelectorTerms:
     - tags:
         "aws:eks:cluster-name": ${module.eks.cluster_name}
