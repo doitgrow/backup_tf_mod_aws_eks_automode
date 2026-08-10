@@ -156,7 +156,7 @@ spec:
   subnetSelectorTerms:
 %{for id in var.subnet_ids~}
     - id: ${id}
-${endfor~}
+%{endfor~}
   securityGroupSelectorTerms:
     - tags:
         "aws:eks:cluster-name": ${module.eks.cluster_name}
