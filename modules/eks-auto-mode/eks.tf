@@ -21,19 +21,8 @@ module "eks" {
   }
 }
 
-resource "null_resource" "update_kubeconfig" {
-  provisioner "local-exec" {
-    command = <<EOT
-      # Update Global Config
-      ORIGINAL_CONTEXT=$(kubectl config current-context)
-      KUBECONFIG=$HOME/.kube/config aws --region ${var.region} eks update-kubeconfig --name ${module.eks.cluster_name} --alias ${module.eks.cluster_name}-${var.region}
-      kubectl config use-context $ORIGINAL_CONTEXT
-      # Update Project Config
-      aws --region ${var.region} eks update-kubeconfig --name ${module.eks.cluster_name} --alias ${module.eks.cluster_name}-${var.region}
-    EOT
-  }
-
-  depends_on = [module.eks]
+data "aws_eks_cluster_auth" "this" {
+  name = module.eks.cluster_name
 }
 
 output "eks_update_kubeconfig" {
@@ -47,23 +36,14 @@ output "eks_cluster_name" {
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command     = "aws"
-    args        = ["eks", "--region", var.region, "get-token", "--cluster-name", module.eks.cluster_name]
-  }
+  token                  = data.aws_eks_cluster_auth.this.token
 }
 
 provider "helm" {
   kubernetes {
     host                   = module.eks.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-    exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      command     = "aws"
-      args        = ["eks", "--region", var.region, "get-token", "--cluster-name", module.eks.cluster_name]
-    }
+    token                  = data.aws_eks_cluster_auth.this.token
   }
 }
 
@@ -72,10 +52,5 @@ provider "kubectl" {
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
   load_config_file       = false
-
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command     = "aws"
-    args        = ["eks", "--region", var.region, "get-token", "--cluster-name", module.eks.cluster_name]
-  }
+  token                  = data.aws_eks_cluster_auth.this.token
 }
